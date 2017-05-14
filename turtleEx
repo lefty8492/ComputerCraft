@@ -1,0 +1,32 @@
+function searchItem(itemName, ...)
+	local retTable = {found = false, slot = 1, count = 0}
+	local optArgs = {...}
+	local itemDamage = optArgs[1]
+	
+	for i = 1,16 do
+		local item = turtle.getItemDetail(i)
+		if item and (item.name == itemName) and (not itemDamage or (item.damage == itemDamage))then
+			retTable.found = true
+			retTable.slot = i
+			retTable.count = item.count
+			break
+		end
+	end
+	
+	return retTable
+end
+
+function refuel(fuelLevel)
+	local retVal = false
+	local selectedSlot = turtle.getSelectedSlot()
+	
+	while fuelLevel ~= 0 do
+		fuelItem = searchCoalLike()
+		if fuelItem.found then
+			if fuelLevel < (fuelItem.count * 10) then
+			end
+		end
+	end
+	
+	turtle.select(selectedSlot)
+end

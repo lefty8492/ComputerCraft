@@ -17,16 +17,31 @@ function searchItem(itemName, ...)
 end
 
 function refuel(fuelLevel)
-	local retVal = false
-	local selectedSlot = turtle.getSelectedSlot()
+	local currentFuelLevel = turtle.getFuelLevel()
 	
-	while fuelLevel ~= 0 do
-		fuelItem = searchCoalLike()
+	if currentFuelLevel >= fuelLevel then
+		return currentFuelLevel
+	end
+	
+	local selectedSlot = turtle.getSelectedSlot()
+	fuelLevel = fuelLevel - currentFuelLevel
+	
+	while true do
+		fuelItem = searchItem("minecraft:coal")
 		if fuelItem.found then
-			if fuelLevel < (fuelItem.count * 10) then
+			turtle.select(fuelItem.slot)
+			if fuelLevel < (fuelItem.count * 80) then
+				turtle.refuel(fuelLevel / 80 + 1)
+				break
+			else
+				turtle.refuel()
+				fuelLevel = fuelLevel - fuelItem.count * 80
 			end
+		else
+			break
 		end
 	end
 	
 	turtle.select(selectedSlot)
+	return turtle.getFuelLevel()
 end

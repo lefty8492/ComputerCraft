@@ -45,3 +45,24 @@ function refuel(fuelLevel)
 	turtle.select(selectedSlot)
 	return turtle.getFuelLevel()
 end
+
+function uTurn(direction)
+	if direction == "right" then
+		turtle.turnRight()
+		if turtle.detect() then
+			return false
+		end
+		turtle.forward()
+		turtle.turnRight()
+	elseif direction == "left" then
+		turtle.turnLeft()
+		if turtle.detect() then
+			return false
+		end
+		turtle.forward()
+		turtle.turnLeft()
+	end
+	
+	return true
+end
+

@@ -35,3 +35,10 @@ MinecraftのMOD、ComputerCraftのタートルで使用するプログラムを�
 
 	USEAGE: turtleEx.refuel(number fuelLevel)  
 	RETURN: number 燃料補給後の燃料レべル  
+
+#### turtleEx.uTurn
+
+タートルを`direction`で指定した側の隣レーンに移動させる  
+
+	USEAGE: turtleEx.uTurn(string direction)  
+	RETURN: boolean 移動完了したとき true、移動できなかったとき false  

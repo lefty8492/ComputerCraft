@@ -1,4 +1,4 @@
-os.loadAPI("rom/myApi/turtleEx")
+os.loadAPI("rom/myTurtle/API/turtleEx")
 
 local Args = {...}
 local length = Args[1]

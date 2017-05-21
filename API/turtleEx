@@ -49,18 +49,19 @@ end
 function uTurn(direction)
 	if direction == "right" then
 		turtle.turnRight()
-		if turtle.detect() then
+		if not turtle.forward() then
 			return false
 		end
-		turtle.forward()
 		turtle.turnRight()
 	elseif direction == "left" then
 		turtle.turnLeft()
-		if turtle.detect() then
+		if not turtle.forward() then
 			return false
 		end
-		turtle.forward()
 		turtle.turnLeft()
+	else
+		print("USEAGE: turtleEx.uTurn(string direction)")
+		return false
 	end
 	
 	return true

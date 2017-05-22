@@ -40,3 +40,72 @@ if fuelLevel > turtleEx.refuel(fuelLevel) then
 	return
 end
 
+--------------------------------------------------
+-- 階段形成
+--------------------------------------------------
+if not turtle.forward() then
+	return false
+end
+
+turtle.turnRight()
+
+if (direction == "up") and (not turtle.up()) then
+	return false
+elseif (direction == "down") and (not turtle.down()) then
+	return false
+end
+
+for i = 1, length do
+	for j = 1, width do
+		while not (turtle.detectDown() or turtle.placeDown()) do
+			if turtle.getSelectedSlot() == 16 then
+				print("Item empty.")
+				return false
+			end
+			turtle.select(turtle.getSelectedSlot() + 1)
+		end
+		
+		if j ~= width then
+			if not turtle.forward() then
+				return false
+			end
+		elseif i ~= length then
+			if i % 2 == 0 then
+				turtleEx.uTurn("right")
+			else
+				turtleEx.uTurn("left")
+			end
+			if (direction == "up") and (not turtle.up()) then
+				return false
+			elseif (direction == "down") and (not turtle.down()) then
+				return false
+			end
+		end
+	end
+end
+
+--------------------------------------------------
+-- 初期位置に戻る
+--------------------------------------------------
+if length % 2 == 0 then
+	turtle.turnRight()
+else
+	for i = 1, (width - 1) do
+		turtle.back()
+	end
+	turtle.turnLeft()
+end
+
+for i = 1, length do
+	if direction == "up" then
+		turtle.back()
+	end
+	if (direction == "up") and (not turtle.down()) then
+		return false
+	elseif (direction == "down") and (not turtle.up()) then
+		return false
+	end
+	if direction == "down" then
+		turtle.back()
+	end
+end

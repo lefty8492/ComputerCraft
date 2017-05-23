@@ -1,11 +1,20 @@
-function searchItem(itemName, ...)
-	local retTable = {found = false, slot = 1, count = 0}
+--------------------------------------------------
+-- アイテムを検索
+-- 引数1 [in] ItemName 検索するアイテム名（必須）
+-- 引数2 [in] itemDamage 検索するアイテムのダメージ値（オプション）
+-- 返値 table
+--      メンバ : bool found 指定のアイテムが見つかった時true
+--               number slot 見つかったアイテムのスロット
+--               number count 見つかったアイテムの個数
+--------------------------------------------------
+function searchItem(ItemName, ...)
+	local retTable = {found = false, slot = 0, count = 0}
 	local optArgs = {...}
 	local itemDamage = optArgs[1]
 	
 	for i = 1,16 do
 		local item = turtle.getItemDetail(i)
-		if item and (item.name == itemName) and (not itemDamage or (item.damage == itemDamage))then
+		if item and (item.name == ItemName) and (not itemDamage or (item.damage == itemDamage))then
 			retTable.found = true
 			retTable.slot = i
 			retTable.count = item.count
@@ -16,26 +25,31 @@ function searchItem(itemName, ...)
 	return retTable
 end
 
-function refuel(fuelLevel)
+--------------------------------------------------
+-- 指定の燃料レベル以上になるまで燃料補給する
+-- 引数 [in] FuelLevel 目標の燃料レベル
+-- 返値 number 燃料補給後の燃料レベル
+--------------------------------------------------
+function refuel(FuelLevel)
 	local currentFuelLevel = turtle.getFuelLevel()
 	
-	if currentFuelLevel >= fuelLevel then
+	if currentFuelLevel >= FuelLevel then
 		return currentFuelLevel
 	end
 	
 	local selectedSlot = turtle.getSelectedSlot()
-	fuelLevel = fuelLevel - currentFuelLevel
+	FuelLevel = FuelLevel - currentFuelLevel
 	
 	while true do
 		fuelItem = searchItem("minecraft:coal")
 		if fuelItem.found then
 			turtle.select(fuelItem.slot)
-			if fuelLevel < (fuelItem.count * 80) then
-				turtle.refuel(fuelLevel / 80 + 1)
+			if FuelLevel < (fuelItem.count * 80) then
+				turtle.refuel(FuelLevel / 80 + 1)
 				break
 			else
 				turtle.refuel()
-				fuelLevel = fuelLevel - fuelItem.count * 80
+				FuelLevel = FuelLevel - fuelItem.count * 80
 			end
 		else
 			break
@@ -46,21 +60,26 @@ function refuel(fuelLevel)
 	return turtle.getFuelLevel()
 end
 
-function uTurn(direction)
-	if direction == "right" then
+--------------------------------------------------
+-- タートルを隣の列に移動し、180度方向を変える
+-- 引数 [in] Direction 転回方向（"left"または"right"）
+-- 返値 bool 転回成功したときtrue
+--------------------------------------------------
+function uTurn(Direction)
+	if Direction == "right" then
 		turtle.turnRight()
 		if not turtle.forward() then
 			return false
 		end
 		turtle.turnRight()
-	elseif direction == "left" then
+	elseif Direction == "left" then
 		turtle.turnLeft()
 		if not turtle.forward() then
 			return false
 		end
 		turtle.turnLeft()
 	else
-		print("USEAGE: turtleEx.uTurn(string direction)")
+		print("USEAGE: turtleEx.uTurn(string Direction)")
 		return false
 	end
 	

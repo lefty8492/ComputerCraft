@@ -55,7 +55,7 @@ function refuel(FuelLevel)
 			break
 		end
 	end
-	
+
 	turtle.select(selectedSlot)
 	return turtle.getFuelLevel()
 end
@@ -82,7 +82,111 @@ function uTurn(Direction)
 		print("USEAGE: turtleEx.uTurn(string Direction)")
 		return false
 	end
-	
 	return true
+end
+
+--------------------------------------------------
+-- Movement(移動)クラスのコンストラクタ
+-- 返値 table 位置と向きを初期化したテーブル
+--------------------------------------------------
+Movement = {}
+function Movement.New()
+	local obj = {}
+	obj.x = 0
+	obj.y = 0
+	obj.z = 0
+	obj.d = 0
+
+	setmetatable(obj, {__index = Movement})
+	return obj
+end
+
+--------------------------------------------------
+-- インスタンスの位置と向きを表示する
+--------------------------------------------------
+function Movement:PrintCoordinate()
+	if not self then return end -- 実体の有無を検査
+
+	print(string.format( "(x, y, z, d) = (%d, %d, %d, %d)", self.x, self.y, self.z, self.d))
+end
+
+--------------------------------------------------
+-- 前進して座標を更新する
+--------------------------------------------------
+function Movement:Forward()
+	if not self then return end -- 実体の有無を検査
+
+	if turtle.forward() then
+		if self.d % 2 == 0 then
+			self.z = self.z + (1 - self.d)
+		else
+			self.x = self.x + (2 - self.d)
+		end
+		return true
+	end
+	return false
+end
+
+--------------------------------------------------
+-- 後退して座標を更新する
+--------------------------------------------------
+function Movement:Back()
+	if not self then return end -- 実体の有無を検査
+
+	if turtle.back() then
+		if self.d % 2 == 0 then
+			self.z = self.z - (1 - self.d)
+		else
+			self.x = self.x - (2 - self.d)
+		end
+		return true
+	end
+	return false
+end
+
+--------------------------------------------------
+-- 上昇して座標を更新する
+--------------------------------------------------
+function Movement:Up()
+	if not self then return end -- 実体の有無を検査
+
+	if turtle.up() then
+		self.y = self.y + 1
+		return true
+	end
+	return false
+end
+
+--------------------------------------------------
+-- 下降して座標を更新する
+--------------------------------------------------
+function Movement:Down()
+	if not self then return end -- 実体の有無を検査
+
+	if turtle.down() then
+		self.y = self.y - 1
+		return true
+	end
+	return false
+end
+
+--------------------------------------------------
+-- 指定の方向を向いて座標を更新する
+-- 引数 [in] Direction 向き、"left"または"right"または"back"(後ろ)
+--------------------------------------------------
+function Movement:Turn(Direction)
+	if not self then return end -- 実体の有無を検査
+
+	if Direction == "left" then
+		turtle.turnLeft()
+		self.d = (self.d + 1) % 4
+	elseif Direction == "right" then
+		turtle.turnRight()
+		self.d = (self.d - 1) % 4
+	elseif Direction == "back" then
+		turtle.turnLeft()
+		turtle.turnLeft()
+		self.d = (self.d + 2) % 4
+	end
 end
 
